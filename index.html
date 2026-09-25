@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense &amp; Budget Visualizer</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Flash-prevention: apply stored theme before first CSS paint (Req 9.5) -->
+    <script>
+      (function () {
+        var theme = localStorage.getItem('expense_tracker_theme');
+        document.documentElement.setAttribute('data-theme', theme || 'light');
+      })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <header role="banner">
+      <h1>Expense &amp; Budget Visualizer</h1>
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label="Switch to dark mode"
+      >🌙</button>
+    </header>
+
+    <main role="main">
+      <!-- Loading indicator: shown while Chart.js CDN is loading -->
+      <div id="loading-indicator" role="status" aria-live="polite" aria-label="Loading application"></div>
+
+      <!-- Notification banner: for non-blocking warnings and errors -->
+      <div id="notification-banner" role="alert" aria-live="assertive"></div>
+
+      <!-- Balance Display -->
+      <section aria-labelledby="balance-heading">
+        <h2 id="balance-heading">Total Balance</h2>
+        <div id="balance-display" aria-live="polite">$0.00</div>
+      </section>
+
+      <!-- Input Form -->
+      <section aria-labelledby="form-heading">
+        <h2 id="form-heading">Add Expense</h2>
+        <form id="input-form" novalidate>
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
+            <input
+              type="text"
+              id="item-name"
+              name="item-name"
+              maxlength="100"
+              autocomplete="off"
+              placeholder="e.g. Coffee"
+              aria-required="true"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              min="0.01"
+              max="999999999.99"
+              step="0.01"
+              placeholder="e.g. 4.50"
+              aria-required="true"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" aria-required="true">
+              <option value="">-- Select a category --</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Fun">Fun</option>
+            </select>
+          </div>
+
+          <button type="submit">Add Transaction</button>
+        </form>
+      </section>
+
+      <!-- Category Manager -->
+      <section id="category-manager" aria-labelledby="category-manager-heading">
+        <h2 id="category-manager-heading">Manage Categories</h2>
+        <div class="category-add-form">
+          <label for="new-category-input">New Category Name</label>
+          <div class="category-input-row">
+            <input
+              type="text"
+              id="new-category-input"
+              name="new-category-input"
+              maxlength="50"
+              autocomplete="off"
+              placeholder="e.g. Health"
+              aria-required="true"
+            />
+            <button type="button" id="add-category-btn">Add Category</button>
+          </div>
+          <span id="category-error" class="field-error" role="alert" aria-live="polite"></span>
+        </div>
+        <ul id="category-list" aria-label="Category list"></ul>
+      </section>
+
+      <!-- Transaction List -->
+      <section aria-labelledby="list-heading">
+        <h2 id="list-heading">Transactions</h2>
+
+        <!-- Sort control (Req 11.1, 11.2) -->
+        <div class="sort-control-wrapper">
+          <label for="sort-control" class="sort-control-label">Sort by:</label>
+          <select id="sort-control" aria-label="Sort transactions">
+            <option value="date-desc">Newest First (Default)</option>
+            <option value="amount-asc">Amount: Low to High</option>
+            <option value="amount-desc">Amount: High to Low</option>
+            <option value="category-asc">Category: A → Z</option>
+            <option value="category-desc">Category: Z → A</option>
+          </select>
+        </div>
+
+        <ul id="transaction-list" aria-label="Transaction history" aria-live="polite"></ul>
+      </section>
+
+      <!-- Chart -->
+      <section aria-labelledby="chart-heading">
+        <h2 id="chart-heading">Spending by Category</h2>
+        <div id="chart-container">
+          <canvas id="expense-chart" role="img" aria-label="Pie chart showing spending distribution by category"></canvas>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

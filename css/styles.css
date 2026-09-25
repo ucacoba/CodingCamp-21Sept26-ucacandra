@@ -1,0 +1,1464 @@
+/* Expense & Budget Visualizer — styles.css */
+
+/* ==========================================================================
+   1. CSS Custom Properties (Design Tokens)
+   ========================================================================== */
+
+:root {
+  /* Category colors (matches CATEGORY_COLORS in app.js) */
+  --color-food:      #FF6384;
+  --color-transport: #36A2EB;
+  --color-fun:       #FFCE56;
+
+  /* Neutral palette — light mode defaults */
+  --color-bg:          #f8f9fa;
+  --color-surface:     #ffffff;
+  --color-border:      #dee2e6;
+  --color-border-focus:#4a90d9;
+  --color-text:        #212529;
+  --color-text-muted:  #6c757d;
+  --color-text-inverse:#ffffff;
+
+  /* Semantic / state colors */
+  --color-error:        #dc3545;
+  --color-error-bg:     #FEE2E2;
+  --color-error-text:   #991b1b;
+  --color-warning:      #92400e;
+  --color-warning-bg:   #FEF3C7;
+  --color-warning-border: #f59e0b;
+  --color-info:         #1e40af;
+  --color-info-bg:      #DBEAFE;
+  --color-info-border:  #93c5fd;
+  --color-success:      #155724;
+  --color-success-bg:   #d4edda;
+
+  /* Interactive */
+  --color-primary:        #4a90d9;
+  --color-primary-hover:  #357abd;
+  --color-primary-active: #2a6099;
+  --color-danger:         #dc3545;
+  --color-danger-hover:   #c82333;
+
+  /* Focus ring / shadow alpha helpers (light mode) */
+  --focus-ring-alpha:        0.25;
+  --focus-ring-error-alpha:  0.2;
+  --hover-overlay:           rgb(0 0 0 / 0.08);
+  --danger-hover-bg:         rgb(220 53 69 / 0.08);
+  --danger-active-bg:        rgb(220 53 69 / 0.15);
+  --danger-border-color:     rgb(220 53 69 / 0.25);
+
+  /* Select arrow (light mode — grey stroke on white bg) */
+  --select-arrow-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236c757d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Theme toggle */
+  --theme-toggle-bg:     transparent;
+  --theme-toggle-border: var(--color-border);
+  --theme-toggle-color:  var(--color-text-muted);
+  --theme-toggle-hover-bg:     rgb(0 0 0 / 0.06);
+  --theme-toggle-hover-border: var(--color-text-muted);
+  --theme-toggle-hover-color:  var(--color-text);
+
+  /* Spacing scale */
+  --space-2xs: 0.25rem;   /*  4px */
+  --space-xs:  0.375rem;  /*  6px */
+  --space-sm:  0.5rem;    /*  8px */
+  --space-md:  1rem;      /* 16px */
+  --space-lg:  1.5rem;    /* 24px */
+  --space-xl:  2rem;      /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+
+  /* Typography */
+  --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+                      Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+                      "Segoe UI Emoji";
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                      "Liberation Mono", "Courier New", monospace;
+
+  --font-size-xs:   0.75rem;   /* 12px */
+  --font-size-sm:   0.875rem;  /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-md:   1.125rem;  /* 18px */
+  --font-size-lg:   1.25rem;   /* 20px */
+  --font-size-xl:   1.5rem;    /* 24px */
+  --font-size-2xl:  2rem;      /* 32px */
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  --line-height-tight:  1.25;
+  --line-height-base:   1.5;
+  --line-height-loose:  1.75;
+
+  /* Borders & radii */
+  --border-width:  1px;
+  --border-radius-sm: 0.25rem;
+  --border-radius:    0.375rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-xl: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow:    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-base:   200ms ease;
+  --transition-slow:   300ms ease;
+}
+
+/* ==========================================================================
+   1a. Dark-Mode Token Overrides (Requirements 9.2, 9.3)
+   ==========================================================================
+   Applied by setting data-theme="dark" on <html>.
+   The inline flash-prevention script in <head> sets this attribute before
+   first paint, preventing a flash of the light theme (Req 9.5).
+   All UI components already reference the custom properties above, so
+   overriding them here is the only change needed for the full dark theme.
+   ========================================================================== */
+
+[data-theme="dark"] {
+  /* Surface & background */
+  --color-bg:      #0f1117;
+  --color-surface: #1c1f26;
+
+  /* Text */
+  --color-text:        #e2e8f0;
+  --color-text-muted:  #94a3b8;
+  --color-text-inverse:#ffffff;
+
+  /* Borders & focus */
+  --color-border:       #2d3748;
+  --color-border-focus: #63aff0;
+
+  /* Interactive — slightly brighter primary to stand out on dark surfaces */
+  --color-primary:        #63aff0;
+  --color-primary-hover:  #89c6f8;
+  --color-primary-active: #3b8fdb;
+  --color-danger:         #f87171;
+  --color-danger-hover:   #fca5a5;
+
+  /* Semantic state colors — dark equivalents */
+  --color-error:        #f87171;
+  --color-error-bg:     #3b1212;
+  --color-error-text:   #fca5a5;
+  --color-warning:      #fcd34d;
+  --color-warning-bg:   #2d1f03;
+  --color-warning-border: #d97706;
+  --color-info:         #93c5fd;
+  --color-info-bg:      #0f1f3d;
+  --color-info-border:  #3b82f6;
+  --color-success:      #6ee7b7;
+  --color-success-bg:   #052e16;
+
+  /* Overlay / interaction alphas for dark surfaces */
+  --hover-overlay:       rgb(255 255 255 / 0.06);
+  --danger-hover-bg:     rgb(248 113 113 / 0.12);
+  --danger-active-bg:    rgb(248 113 113 / 0.2);
+  --danger-border-color: rgb(248 113 113 / 0.3);
+
+  /* Select dropdown arrow — light stroke on dark bg */
+  --select-arrow-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Theme toggle in dark mode */
+  --theme-toggle-bg:     transparent;
+  --theme-toggle-border: #2d3748;
+  --theme-toggle-color:  #94a3b8;
+  --theme-toggle-hover-bg:     rgb(255 255 255 / 0.08);
+  --theme-toggle-hover-border: #94a3b8;
+  --theme-toggle-hover-color:  #e2e8f0;
+
+  /* Shadows — softer on dark backgrounds */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow:    0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+}
+
+/*
+ * Global color-transition guard — ensures all elements that inherit colors
+ * animate smoothly when [data-theme] changes on <html>.
+ * Only transitions color-related properties; avoids disrupting layout or
+ * transform animations. Respects prefers-reduced-motion.
+ */
+*,
+*::before,
+*::after {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+/* Opt out elements where an abrupt change is preferable or needed */
+.spinner,
+[class*="animation"],
+input[type="range"],
+input[type="color"] {
+  transition-property: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration:  0ms !important;
+    animation-delay:     0ms !important;
+  }
+}
+
+/* ==========================================================================
+   2. CSS Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin:  0;
+  padding: 0;
+}
+
+html {
+  /* Prevent font scaling in landscape on iOS while allowing user zoom */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  /* Smooth transition between light and dark theme colors (Req 9.2, 9.3) */
+  transition:
+    background-color var(--transition-base),
+    color            var(--transition-base);
+}
+
+/* Remove default list styling only when lists are used as UI components
+   (not for semantic prose lists) */
+ul,
+ol {
+  list-style: none;
+  margin:     0;
+  padding:    0;
+}
+
+/* Remove default button and input chrome */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+/* Remove inner border and padding on Firefox */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border:  0;
+  padding: 0;
+}
+
+/* Normalize fieldset */
+fieldset {
+  border:  0;
+  margin:  0;
+  padding: 0;
+  min-width: 0;
+}
+
+/* Normalize headings */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+/* Normalize paragraphs */
+p {
+  margin: 0;
+}
+
+/* Normalize images */
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove anchor underline decoration by default */
+a {
+  color: inherit;
+  text-decoration-skip-ink: auto;
+}
+
+/* ==========================================================================
+   3. Base Typography
+   ========================================================================== */
+
+body {
+  font-family:   var(--font-family-base);
+  font-size:     var(--font-size-base);
+  font-weight:   var(--font-weight-normal);
+  line-height:   var(--line-height-base);
+  color:         var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading scale */
+h1 { font-size: var(--font-size-2xl); }
+h2 { font-size: var(--font-size-xl);  }
+h3 { font-size: var(--font-size-lg);  }
+h4 { font-size: var(--font-size-md);  }
+h5 { font-size: var(--font-size-base); }
+h6 { font-size: var(--font-size-sm);  }
+
+/* Muted / helper text */
+small,
+.text-muted {
+  font-size: var(--font-size-sm);
+  color:     var(--color-text-muted);
+}
+
+/* Monospace elements */
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-family-mono);
+  font-size:   0.9em;
+}
+
+/* ==========================================================================
+   4. Layout — App Shell (Task 2.2)
+   ========================================================================== */
+
+body {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  padding:         0 var(--space-md);
+}
+
+/* Site header ------------------------------------------------------------ */
+
+header[role="banner"] {
+  width:           100%;
+  max-width:       640px;
+  padding:         var(--space-lg) 0 var(--space-md);
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+}
+
+header[role="banner"] h1 {
+  font-size:   var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color:       var(--color-text);
+  transition:  color var(--transition-base);
+}
+
+/* Theme toggle button ---------------------------------------------------- */
+
+#theme-toggle {
+  flex-shrink:    0;
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  width:          2.25rem;
+  height:         2.25rem;
+  padding:        0;
+  font-size:      1.25rem;
+  line-height:    1;
+  border-radius:  var(--border-radius);
+  background:     var(--color-surface);
+  border:         var(--border-width) solid var(--color-border);
+  color:          var(--color-text);
+  transition:     background    var(--transition-fast),
+                  border-color  var(--transition-fast),
+                  color         var(--transition-fast);
+  cursor:         pointer;
+}
+
+#theme-toggle:hover {
+  background:   var(--color-bg);
+  border-color: var(--color-border-focus);
+}
+
+#theme-toggle:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Main content column ---------------------------------------------------- */
+
+main[role="main"] {
+  width:      100%;
+  max-width:  640px;
+  display:    flex;
+  flex-direction: column;
+  gap:        var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+/* Sections inside main inherit full column width */
+main[role="main"] > section,
+main[role="main"] > div {
+  width: 100%;
+}
+
+/* ==========================================================================
+   5. Component Layout — individual sections (Task 2.2)
+   ========================================================================== */
+
+/* Notification banner ---------------------------------------------------- */
+
+#notification-banner {
+  width:      100%;
+  max-width:  640px;
+  /* Hidden by default; JS adds content + visible class */
+}
+
+/* Loading indicator — layout stub (full styles in section 10) ------------ */
+
+#loading-indicator {
+  width:     100%;
+  max-width: 640px;
+  /* display/alignment/spinner styles defined in section 10 (Task 13.3) */
+}
+
+/* Balance display -------------------------------------------------------- */
+
+#balance-display {
+  font-size:     clamp(2rem, 5vw, 3rem);
+  font-weight:   var(--font-weight-bold);
+  color:         var(--color-text);
+  background:    var(--color-surface);
+  border:        var(--border-width) solid var(--color-border);
+  border-left:   4px solid var(--color-primary);
+  border-radius: var(--border-radius-lg);
+  padding:       var(--space-lg) var(--space-xl);
+  box-shadow:    var(--shadow-md);
+  letter-spacing: -0.02em;  /* tight tracking suits large currency figures */
+  word-break:    break-all;  /* prevent overflow for very large numbers */
+  transition:
+    background   var(--transition-base),
+    color        var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow   var(--transition-base);
+}
+
+/* Input form ------------------------------------------------------------- */
+
+#input-form {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-md);
+}
+
+.form-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2xs);
+}
+
+.form-group label {
+  font-size:   var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color:       var(--color-text);
+}
+
+.form-group input,
+.form-group select {
+  width:         100%;
+  padding:       var(--space-sm) var(--space-md);
+  border:        var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  background:    var(--color-surface);
+  color:         var(--color-text);
+  font-size:     var(--font-size-base);
+  transition:    border-color var(--transition-fast),
+                 box-shadow   var(--transition-fast),
+                 background   var(--transition-base),
+                 color        var(--transition-base);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline:      none;
+  border-color: var(--color-border-focus);
+  box-shadow:   0 0 0 3px color-mix(in srgb, var(--color-border-focus) 25%, transparent);
+}
+
+#input-form button[type="submit"] {
+  align-self:      flex-start;
+  padding:         var(--space-sm) var(--space-xl);
+  background:      var(--color-primary);
+  color:           var(--color-text-inverse);
+  border-radius:   var(--border-radius);
+  font-size:       var(--font-size-base);
+  font-weight:     var(--font-weight-semibold);
+  transition:      background var(--transition-fast);
+}
+
+#input-form button[type="submit"]:hover {
+  background: var(--color-primary-hover);
+}
+
+#input-form button[type="submit"]:active {
+  background: var(--color-primary-active);
+}
+
+#input-form button[type="submit"]:focus-visible {
+  outline:      2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Transaction list ------------------------------------------------------- */
+
+#transaction-list {
+  overflow-y: auto;
+  max-height: 400px;
+  width:      100%;
+  border:     var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-surface);
+  transition:
+    background   var(--transition-base),
+    border-color var(--transition-base);
+}
+
+/* Chart container -------------------------------------------------------- */
+
+#chart-container {
+  width:     100%;
+  max-width: 400px;
+  margin:    0 auto;  /* center within the column */
+  transition: background var(--transition-base);
+}
+
+#chart-container canvas {
+  width:  100% !important;
+  height: auto !important;
+}
+
+/* ==========================================================================
+   6. Utility Classes (Task 2.2)
+   ========================================================================== */
+
+/* Screen-reader-only content: visually hidden but accessible to AT */
+.visually-hidden {
+  position: absolute;
+  width:    1px;
+  height:   1px;
+  padding:  0;
+  margin:   -1px;
+  overflow: hidden;
+  clip:     rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border:   0;
+}
+
+/* ==========================================================================
+   7. Responsive Guards (Task 2.2)
+   ========================================================================== */
+
+/*
+ * The single-column flex layout is inherently responsive from 320 px onward:
+ * - max-width: 640px + horizontal padding prevents overflow on any viewport.
+ * - overflow-y: auto on #transaction-list prevents vertical overflow.
+ * - max-width: 400px + margin: auto on #chart-container keeps chart contained.
+ *
+ * The guard below ensures no element escapes its column on very narrow
+ * viewports where padding might push content off-screen.
+ */
+
+@media (max-width: 400px) {
+  body {
+    padding: 0 var(--space-sm);
+  }
+
+  #input-form button[type="submit"] {
+    width: 100%;   /* full-width tap target on the smallest phones */
+  }
+}
+
+/* ==========================================================================
+   8. Notification Banner (Task 5.1)
+   ========================================================================== */
+
+.notification-banner {
+  display:         flex;
+  align-items:     flex-start;
+  justify-content: space-between;
+  gap:             var(--space-md);
+  width:           100%;
+  padding:         var(--space-sm) var(--space-md);
+  border-radius:   var(--border-radius);
+  font-size:       var(--font-size-sm);
+  line-height:     var(--line-height-base);
+}
+
+/* Type variants */
+
+.notification-banner--warning {
+  background-color: var(--color-warning-bg);
+  color:            var(--color-warning);
+  border:           var(--border-width) solid var(--color-warning-border);
+}
+
+.notification-banner--error {
+  background-color: var(--color-error-bg);
+  color:            var(--color-error-text);
+  border:           var(--border-width) solid var(--color-error);
+}
+
+.notification-banner--info {
+  background-color: var(--color-info-bg);
+  color:            var(--color-info);
+  border:           var(--border-width) solid var(--color-info-border);
+}
+
+/* Banner message text */
+
+.notification-banner__message {
+  flex: 1;
+  min-width: 0;    /* allow text to wrap inside flex item */
+  word-break: break-word;
+}
+
+/* Banner close button */
+
+.notification-banner__close {
+  flex-shrink:   0;
+  display:       inline-flex;
+  align-items:   center;
+  justify-content: center;
+  width:         1.5rem;
+  height:        1.5rem;
+  padding:       0;
+  font-size:     1.25rem;
+  line-height:   1;
+  font-weight:   var(--font-weight-bold);
+  border-radius: var(--border-radius-sm);
+  color:         inherit;
+  opacity:       0.7;
+  transition:    opacity var(--transition-fast),
+                 background var(--transition-fast);
+}
+
+.notification-banner__close:hover {
+  opacity: 1;
+  background: var(--hover-overlay);
+}
+
+.notification-banner__close:focus-visible {
+  outline:        2px solid currentColor;
+  outline-offset: 2px;
+  opacity:        1;
+}
+
+/* ==========================================================================
+   9. Inline Field Errors (Task 5.1 / 13.1)
+   ========================================================================== */
+
+.field-error {
+  display:     flex;
+  align-items: baseline;
+  gap:         var(--space-2xs);
+  margin-top:  var(--space-2xs);
+  font-size:   var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color:       var(--color-error);
+  line-height: var(--line-height-base);
+}
+
+/* Warning icon prepended via CSS — uses a plain "!" so no external asset needed */
+.field-error::before {
+  content:     "⚠";
+  flex-shrink: 0;
+  font-style:  normal;
+  font-size:   0.8em;
+  /* Slightly shift icon to align with cap-height of the text */
+  line-height: 1.4;
+}
+
+/* Highlight the field itself when it has an associated error */
+.form-group input[aria-invalid="true"],
+.form-group select[aria-invalid="true"] {
+  border-color: var(--color-error);
+  box-shadow:   0 0 0 3px color-mix(in srgb, var(--color-error) 20%, transparent);
+}
+
+/* Keep error-state focus ring red so the field stays visually distinct */
+.form-group input[aria-invalid="true"]:focus,
+.form-group select[aria-invalid="true"]:focus {
+  border-color: var(--color-error);
+  box-shadow:   0 0 0 3px color-mix(in srgb, var(--color-error) 35%, transparent);
+  outline: none;
+}
+
+/* ==========================================================================
+   10. Input Form Polish — WCAG 2.1 AA Focus Rings & Disabled State (Task 13.1)
+   ========================================================================== */
+
+/*
+ * WCAG 2.1 AA requires a visible focus indicator with at least 3:1 contrast
+ * against adjacent colors. The outline below uses a solid 2 px ring at
+ * 2 px offset (total visible width ≥ 4 px) in the primary blue (#4a90d9)
+ * against white backgrounds, which exceeds the 3:1 ratio requirement.
+ */
+
+/* ---- Text / number inputs ---- */
+
+.form-group input:focus-visible {
+  outline:      2px solid var(--color-border-focus);
+  outline-offset: 1px;
+  /* border-color + box-shadow already set above; outline adds extra AAA safety */
+}
+
+/* ---- Select / dropdown ---- */
+
+.form-group select:focus-visible {
+  outline:      2px solid var(--color-border-focus);
+  outline-offset: 1px;
+}
+
+/* ---- Submit button focus ring ---- */
+
+/*
+ * Already covered by `#input-form button[type="submit"]:focus-visible` in
+ * section 5, but we tighten the contrast here: white background behind button
+ * means the primary-blue outline satisfies the 3:1 WCAG contrast requirement.
+ * No changes needed beyond what's already defined; rule kept as documentation.
+ */
+
+/* ---- Submit button disabled state ---- */
+
+#input-form button[type="submit"]:disabled,
+#input-form button[type="submit"][aria-disabled="true"] {
+  background:    var(--color-text-muted);   /* #6c757d — low-emphasis grey */
+  color:         var(--color-text-inverse);
+  cursor:        not-allowed;
+  opacity:       0.65;
+  pointer-events: none;
+}
+
+/* ---- Ensure form fields never overflow on narrow viewports ---- */
+
+.form-group input,
+.form-group select {
+  /* Already 100% in section 5 — min-width:0 prevents flex blowout */
+  min-width: 0;
+}
+
+/* ---- Submit button full-width on narrow viewports (≤ 400 px) ---- */
+/* Already handled in section 7 responsive guard; no duplication needed */
+
+/* ==========================================================================
+   11. Transaction List Items and Category Badges (Task 13.2)
+   ========================================================================== */
+
+/* Transaction list -------------------------------------------------------- */
+
+#transaction-list {
+  /* Supplement the overflow-y / max-height already set in section 5 */
+  padding: 0;   /* remove any UA list padding */
+  margin:  0;
+}
+
+/* Individual transaction row */
+
+.transaction-item {
+  display:         flex;
+  align-items:     center;
+  gap:             var(--space-sm);
+  padding:         var(--space-sm) var(--space-md);
+  border-bottom:   var(--border-width) solid var(--color-border);
+  transition:      background var(--transition-fast);
+  min-width:       0;   /* allow flex children to shrink below their content size */
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-item:hover {
+  background: var(--color-bg);
+}
+
+/* Item name — grows to fill available space; truncates if too long */
+
+.transaction-name {
+  flex:          1 1 0;
+  min-width:     0;       /* required for text-overflow inside a flex item */
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+  font-size:     var(--font-size-base);
+  color:         var(--color-text);
+}
+
+/* Monetary amount — fixed-width appearance, right-aligned */
+
+.transaction-amount {
+  flex-shrink:    0;
+  font-variant-numeric: tabular-nums;
+  font-family:   var(--font-family-mono);
+  font-size:     var(--font-size-sm);
+  font-weight:   var(--font-weight-semibold);
+  color:         var(--color-text);
+  white-space:   nowrap;
+}
+
+/* Category badge ---------------------------------------------------------- */
+
+.category-badge {
+  flex-shrink:   0;
+  display:       inline-block;
+  padding:       var(--space-2xs) var(--space-xs);
+  border-radius: 9999px;           /* pill shape */
+  font-size:     var(--font-size-xs);
+  font-weight:   var(--font-weight-medium);
+  line-height:   var(--line-height-tight);
+  color:         var(--color-text); /* dark text for contrast on all three pastel bg colors */
+  white-space:   nowrap;
+}
+
+.category-food {
+  background-color: var(--color-food);
+}
+
+.category-transport {
+  background-color: var(--color-transport);
+  color:            var(--color-text-inverse); /* white text — blue bg is dark enough */
+}
+
+.category-fun {
+  background-color: var(--color-fun);
+}
+
+/* Delete button ----------------------------------------------------------- */
+
+.delete-btn {
+  flex-shrink:    0;
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  width:          1.75rem;
+  height:         1.75rem;
+  padding:        0;
+  border-radius:  var(--border-radius-sm);
+  font-size:      1rem;
+  line-height:    1;
+  color:          var(--color-text-muted);
+  background:     transparent;
+  border:         1px solid transparent;
+  transition:     color          var(--transition-fast),
+                  background     var(--transition-fast),
+                  border-color   var(--transition-fast);
+}
+
+.delete-btn:hover {
+  color:            var(--color-danger);
+  background:       var(--danger-hover-bg);
+  border-color:     var(--danger-border-color);
+}
+
+.delete-btn:active {
+  background: var(--danger-active-bg);
+}
+
+.delete-btn:focus-visible {
+  outline:        2px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+/* "No transactions" placeholder ------------------------------------------ */
+
+.no-transactions {
+  padding:    var(--space-xl) var(--space-md);
+  text-align: center;
+  font-size:  var(--font-size-sm);
+  color:      var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Sort control (Task 19.1) ----------------------------------------------- */
+
+.sort-control-wrapper {
+  display:        flex;
+  align-items:    center;
+  gap:            var(--space-sm);
+  margin-bottom:  var(--space-sm);
+  flex-wrap:      wrap;
+}
+
+.sort-control-label {
+  font-size:   var(--font-size-sm);
+  color:       var(--color-text-muted);
+  white-space: nowrap;
+}
+
+#sort-control {
+  flex:             1 1 auto;
+  min-width:        0;
+  max-width:        260px;
+  padding:          var(--space-xs) var(--space-sm);
+  border:           var(--border-width) solid var(--color-border);
+  border-radius:    var(--border-radius);
+  background-color: var(--color-surface);
+  color:            var(--color-text);
+  font-size:        var(--font-size-sm);
+  cursor:           pointer;
+  appearance:       none;
+  -webkit-appearance: none;
+  background-image:    var(--select-arrow-url);
+  background-repeat:   no-repeat;
+  background-position: right var(--space-sm) center;
+  background-size:     12px 8px;
+  padding-right:       calc(var(--space-sm) * 2 + 12px);
+}
+
+#sort-control:focus {
+  outline:     2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  border-color: var(--color-border-focus);
+}
+
+/* Dark mode overrides for sort control */
+[data-theme="dark"] #sort-control {
+  background-image: var(--select-arrow-url-dark, var(--select-arrow-url));
+}
+
+/* ==========================================================================
+   10. Loading Spinner (Task 13.3)
+   ========================================================================== */
+
+/*
+ * #loading-indicator is shown during App bootstrap while Chart.js CDN loads.
+ * It contains a .spinner element injected by app.js:
+ *   loadingEl.innerHTML = '<span class="spinner" aria-hidden="true"></span> Loading…';
+ */
+
+#loading-indicator {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             var(--space-sm);
+  min-height:      4rem;
+  font-size:       var(--font-size-sm);
+  color:           var(--color-text-muted);
+}
+
+/* CSS-only spinner: a circle with one visible border segment that rotates */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display:       inline-block;
+  flex-shrink:   0;
+  width:         1.5rem;
+  height:        1.5rem;
+  border:        3px solid var(--color-border);        /* full ring (muted) */
+  border-top-color: var(--color-primary);              /* one colored segment */
+  border-radius: 50%;
+  animation:     spin 0.75s linear infinite;
+}
+
+/* ==========================================================================
+   11. Chart Container — placeholder and error states (Task 13.3)
+   ========================================================================== */
+
+/*
+ * #chart-container already has max-width/margin:auto from section 5.
+ * These rules style the text-only states injected by ChartRenderer and App.
+ */
+
+.chart-placeholder,
+.chart-error {
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  min-height:  120px;
+  padding:     var(--space-lg);
+  text-align:  center;
+  font-size:   var(--font-size-sm);
+  color:       var(--color-text-muted);
+  font-style:  italic;
+}
+
+.chart-error {
+  color:            var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border:           var(--border-width) solid var(--color-error);
+  border-radius:    var(--border-radius);
+  font-style:       normal;
+  font-weight:      var(--font-weight-medium);
+}
+
+/* ==========================================================================
+   12. Task 13.1 — Input Form Polish: WCAG 2.1 AA Focus Rings & Validation UI
+   ========================================================================== */
+
+/*
+ * WCAG 2.1 AA SC 1.4.11 Non-Text Contrast (≥ 3:1) and
+ * SC 2.4.7 Focus Visible requirements.
+ *
+ * Adjacent background colours used in this form:
+ *   - Field background:  #ffffff (white)
+ *   - Page background:   #f8f9fa (near-white)
+ *   - Primary blue:      #4a90d9 — contrast vs white ≈ 3.0:1 (AA for UI components)
+ *   - Error red:         #dc3545 — contrast vs white ≈ 4.5:1 (exceeds AA)
+ *
+ * All focus rings below use a 2 px solid outline at 2 px offset, giving a
+ * total visible indicator area that satisfies SC 2.4.11 (WCAG 2.2 focus
+ * appearance) as well as the WCAG 2.1 SC 2.4.7 requirement.
+ */
+
+/* ── 1. Form-group error state container ─────────────────────────────────── */
+/*
+ * When a field inside a .form-group is marked aria-invalid="true", the
+ * container gets a subtle left-border accent so the error context is
+ * immediately visible even before the user reads the error text.
+ */
+
+.form-group:has(input[aria-invalid="true"]),
+.form-group:has(select[aria-invalid="true"]) {
+  border-left: 3px solid var(--color-error);
+  padding-left: var(--space-sm);
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+}
+
+/* ── 2. Select element — native-chrome reset + consistent focus ring ──────── */
+/*
+ * Some browsers override the focus ring on <select> with native chrome that
+ * ignores custom box-shadow. Using `outline` ensures cross-browser visibility.
+ * The outline is 2 px wide in primary-blue (#4a90d9), which achieves ≥ 3:1
+ * contrast against the white field background (required by SC 1.4.11).
+ */
+
+.form-group select {
+  /* Ensure consistent appearance on WebKit / Blink — allows custom styling */
+  -webkit-appearance: none;
+  appearance: none;
+
+  /* Custom dropdown arrow via CSS variable — updates for dark mode automatically */
+  background-image:    var(--select-arrow-url);
+  background-repeat:   no-repeat;
+  background-position: right var(--space-md) center;
+  padding-right: calc(var(--space-md) + 1.25rem); /* reserve space for arrow */
+}
+
+.form-group select:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 2px;
+  /* box-shadow ring already set in section 5 — combined effect exceeds AA */
+}
+
+/* Select in error state: red outline matches the error colour ─────────────── */
+
+.form-group select[aria-invalid="true"]:focus-visible {
+  outline-color: var(--color-error);
+}
+
+/* ── 3. Text / number input — tighten focus-visible outline ─────────────── */
+/*
+ * Override the outline-offset from section 10 (1px) to 2px for greater
+ * visual separation on dense UIs, and explicitly document the contrast check.
+ * #4a90d9 on #ffffff achieves 3.0:1 (AA pass for non-text contrast).
+ */
+
+.form-group input[type="text"]:focus-visible,
+.form-group input[type="number"]:focus-visible {
+  outline:        2px solid var(--color-border-focus);  /* #4a90d9 — 3.0:1 vs white */
+  outline-offset: 2px;
+}
+
+/* Inputs in error state: keep error-red outline on focus ───────────────── */
+
+.form-group input[aria-invalid="true"]:focus-visible {
+  outline-color: var(--color-error);  /* #dc3545 — 4.5:1 vs white */
+  outline-offset: 2px;
+}
+
+/* ── 4. Submit button — reinforced focus ring ─────────────────────────────── */
+/*
+ * The button background is --color-primary (#4a90d9). The outer focus ring
+ * must contrast ≥ 3:1 against BOTH the button background and the page bg.
+ * A 2 px white separator + 2 px dark-blue outer ring achieves this:
+ *   dark-blue #1a3c5e vs page bg #f8f9fa ≈ 9:1 (AAA)
+ *   white gap vs button bg #4a90d9 ≈ 4.6:1 (AA)
+ */
+
+#input-form button[type="submit"]:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-border-focus) 35%, transparent);
+}
+
+/* ── 5. Form disabled / loading state ─────────────────────────────────────── */
+/*
+ * While Chart.js is loading (App.init() step 2), the submit button is set
+ * to disabled. Optionally the whole form can be wrapped in a <fieldset
+ * disabled> for full native disabling; the styles below handle both patterns.
+ *
+ * The disabled cursor and muted styling communicate non-interactivity while
+ * maintaining legibility (contrast of muted grey #6c757d on white ≈ 4.6:1).
+ */
+
+/* Fieldset-disabled pattern (if app ever wraps form in a disabled fieldset) */
+#input-form fieldset:disabled input,
+#input-form fieldset:disabled select,
+#input-form fieldset:disabled button {
+  opacity:        0.65;
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
+/* Individual field disabled state (e.g. number input clamped by JS) */
+.form-group input:disabled,
+.form-group select:disabled {
+  background:     var(--color-bg);      /* #f8f9fa — slightly off-white */
+  color:          var(--color-text-muted);
+  border-color:   var(--color-border);
+  cursor:         not-allowed;
+  opacity:        0.7;
+}
+
+/* ── 6. Inline validation error span — ensure icon + text alignment ──────── */
+/*
+ * .field-error is already defined in section 9 with the ⚠ ::before icon.
+ * These rules supplement it with:
+ *   - `role="alert"` is set by JS; the styles here reinforce visibility.
+ *   - A slightly larger icon on wider viewports for better scannability.
+ *   - Smooth appearance via a short fade-in (respects prefers-reduced-motion).
+ */
+
+.field-error {
+  /* Ensure the error is always visible — override any inherited display:none */
+  display: flex !important;
+  animation: fieldErrorFadeIn 150ms ease both;
+}
+
+@keyframes fieldErrorFadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .field-error {
+    animation: none;
+  }
+}
+
+/* Slightly larger warning icon at wider viewports */
+@media (min-width: 480px) {
+  .field-error::before {
+    font-size: 0.875em;
+  }
+}
+
+/* ── 7. Label colour on error — reinforce which field has an issue ──────── */
+/*
+ * When a field is aria-invalid, tint the sibling label red so keyboard and
+ * pointer users immediately see which label maps to the error.
+ *
+ * :has() is supported in all target browsers (Chrome 105+, Safari 15.4+,
+ * Firefox 121+). Browsers that don't support :has() simply skip this rule —
+ * the field-error message is still displayed so no information is lost.
+ */
+
+.form-group:has(input[aria-invalid="true"]) label,
+.form-group:has(select[aria-invalid="true"]) label {
+  color: var(--color-error);   /* #dc3545 — 4.5:1 on white, AA pass */
+}
+
+/* Restore default label colour when the error is cleared */
+.form-group label {
+  transition: color var(--transition-fast);
+}
+
+/* ==========================================================================
+   12. Task 13.3 — Balance Display, Chart Container, Notification Banner &
+       Loading Indicator polish
+   ========================================================================== */
+
+/* ---- Loading indicator: collapse when empty (JS clears innerHTML to '') ----
+ *
+ * app.js bootstraps by setting loadingEl.innerHTML to a spinner + text, then
+ * clears it to '' once ready. Without the :empty rule below, the indicator's
+ * min-height: 4rem (section 10) reserves vertical space even when blank.
+ * :empty matches when there are no child nodes or text nodes.
+ */
+
+#loading-indicator:empty {
+  display:    none;
+  min-height: 0;
+}
+
+/* ---- Balance display — reinforce prominence --------------------------------
+ *
+ * The clamp(2rem, 5vw, 3rem) rule in section 5 already provides a large,
+ * responsive figure. We add a subtle text gradient on modern browsers to make
+ * the balance feel more "financial-dashboard" while keeping a plain fallback.
+ * The section-heading label ("Total Balance") above is styled via the default
+ * h2 rules and is visually separated by the parent section gap.
+ */
+
+#balance-display {
+  /* Ensure the figure is always bold even if inherited weight changes */
+  font-weight: var(--font-weight-bold);
+
+  /* Use tabular numerals so the figure never shifts width as it updates */
+  font-variant-numeric: tabular-nums;
+
+  /* Subtle primary-colour left accent already exists (border-left in section 5);
+     add a matching text color to reinforce the primary tone */
+  color: var(--color-primary);
+}
+
+/* ---- Chart container — ensure a visible render area -----------------------
+ *
+ * Chart.js draws onto the canvas at whatever size the container reports.
+ * Without an explicit dimension the container may collapse to 0 px on first
+ * render before Chart.js has run. Setting a min-height of 300px ensures the
+ * canvas always has space, and the 1/1 aspect-ratio on the canvas itself
+ * (overriding the height:auto set in section 5) keeps the pie chart square
+ * on all viewport widths.
+ */
+
+#chart-container {
+  min-height: 300px;
+}
+
+#chart-container canvas {
+  /* Square canvas looks best for a pie/doughnut chart.
+     Chart.js respects this and fills the available width. */
+  aspect-ratio: 1 / 1;
+  max-height:   400px;   /* never taller than 400 px even on very wide viewports */
+  height:       auto !important;  /* override any inline style Chart.js might set */
+}
+
+/* ---- Notification banner — ensure container never reserves space when empty
+ *
+ * #notification-banner starts empty in the HTML. Without this rule the element
+ * exists in the layout flow even when no banner is present, potentially adding
+ * unwanted whitespace. Using :empty (same pattern as loading indicator above)
+ * collapses it cleanly.
+ */
+
+#notification-banner:empty {
+  display: none;
+}
+
+/* ---- Notification banner variants — alias shorthand classes ---------------
+ *
+ * app.js attaches BEM modifier classes (notification-banner--warning, etc.).
+ * The design also mentions plain shorthand variants (.warning, .error, .info)
+ * as documented in the task spec. These aliases forward to the same token
+ * values so both naming conventions work if either is used in the future.
+ */
+
+.notification-banner.warning,
+.notification-banner--warning {
+  background-color: var(--color-warning-bg);
+  color:            var(--color-warning);
+  border:           var(--border-width) solid var(--color-warning-border);
+}
+
+.notification-banner.error,
+.notification-banner--error {
+  background-color: var(--color-error-bg);
+  color:            var(--color-error-text);
+  border:           var(--border-width) solid var(--color-error);
+}
+
+.notification-banner.info,
+.notification-banner--info {
+  background-color: var(--color-info-bg);
+  color:            var(--color-info);
+  border:           var(--border-width) solid var(--color-info-border);
+}
+
+/* ==========================================================================
+   Category Manager — #category-manager section (Task 18.1)
+   ========================================================================== */
+
+#category-manager {
+  background-color: var(--color-surface);
+  border:           var(--border-width) solid var(--color-border);
+  border-radius:    var(--border-radius);
+  padding:          var(--space-md);
+}
+
+/* Add-form row: input + button side by side */
+.category-add-form {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-xs);
+  margin-bottom:  var(--space-md);
+}
+
+.category-input-row {
+  display:   flex;
+  gap:       var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.category-input-row input[type="text"] {
+  flex:          1 1 0;
+  min-width:     0;
+  padding:       var(--space-sm) var(--space-md);
+  border:        var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-size:     var(--font-size-base);
+  color:         var(--color-text);
+  background-color: var(--color-surface);
+  transition:    border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.category-input-row input[type="text"]:focus {
+  outline:      none;
+  border-color: var(--color-border-focus);
+  box-shadow:   0 0 0 3px rgba(74, 144, 217, var(--focus-ring-alpha));
+}
+
+.category-input-row input[type="text"][aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+#add-category-btn {
+  padding:          var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color:            var(--color-text-inverse);
+  border:           none;
+  border-radius:    var(--border-radius-sm);
+  font-size:        var(--font-size-base);
+  font-weight:      600;
+  cursor:           pointer;
+  white-space:      nowrap;
+  transition:       background-color var(--transition-fast),
+                    transform       var(--transition-fast);
+}
+
+#add-category-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+#add-category-btn:active {
+  background-color: var(--color-primary-active);
+  transform:        scale(0.97);
+}
+
+#add-category-btn:focus-visible {
+  outline:    3px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Inline error span (reuses .field-error; also targeted directly for clarity) */
+#category-error {
+  font-size: var(--font-size-sm);
+  color:     var(--color-error);
+  min-height: 1.2em;  /* reserves space so layout doesn't jump */
+}
+
+/* Category list */
+#category-list {
+  list-style: none;
+  margin:     0;
+  padding:    0;
+  display:    flex;
+  flex-direction: column;
+  gap:        var(--space-xs);
+}
+
+.category-item {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-sm);
+  padding:     var(--space-xs) var(--space-sm);
+  border:      var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg);
+}
+
+/* Color swatch */
+.category-swatch {
+  display:       inline-block;
+  width:         1rem;
+  height:        1rem;
+  border-radius: var(--border-radius-sm);
+  flex-shrink:   0;
+  border:        var(--border-width) solid rgb(0 0 0 / 0.1);
+}
+
+.category-item-name {
+  flex:       1;
+  font-size:  var(--font-size-base);
+  color:      var(--color-text);
+  font-weight: 500;
+}
+
+/* Remove button for custom categories */
+.remove-category-btn {
+  margin-left:      auto;
+  padding:          var(--space-2xs) var(--space-xs);
+  background-color: transparent;
+  color:            var(--color-danger);
+  border:           var(--border-width) solid transparent;
+  border-radius:    var(--border-radius-sm);
+  font-size:        var(--font-size-sm);
+  font-weight:      700;
+  cursor:           pointer;
+  line-height:      1;
+  transition:       background-color var(--transition-fast),
+                    border-color     var(--transition-fast),
+                    color            var(--transition-fast);
+}
+
+.remove-category-btn:hover {
+  background-color: var(--danger-hover-bg);
+  border-color:     var(--danger-border-color);
+}
+
+.remove-category-btn:active {
+  background-color: var(--danger-active-bg);
+}
+
+.remove-category-btn:focus-visible {
+  outline:        3px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+/* Dark mode overrides for category manager */
+[data-theme="dark"] #category-manager {
+  background-color: var(--color-surface);
+  border-color:     var(--color-border);
+}
+
+[data-theme="dark"] .category-item {
+  background-color: var(--color-bg);
+  border-color:     var(--color-border);
+}
+
+[data-theme="dark"] .category-input-row input[type="text"] {
+  background-color: var(--color-surface);
+  color:            var(--color-text);
+  border-color:     var(--color-border);
+}

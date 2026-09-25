@@ -1,0 +1,13 @@
+{
+  "name": "expense-budget-visualizer",
+  "version": "1.0.0",
+  "description": "Expense & Budget Visualizer — client-side SPA",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:responsive": "playwright test tests/responsive.spec.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2"
+  }
+}
